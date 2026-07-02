@@ -1,9 +1,5 @@
-const canvas = document.querySelector("#postCanvas");
+﻿const canvas = document.querySelector("#postCanvas");
 const ctx = canvas.getContext("2d");
-const DEFAULT_AVATAR_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAocSURBVFhHxZf7U1TnHYd3zzm7Z6/swrIgFxEQxCAiIAosl91ll8suy3JdJFzkKilq8FprvMUoBAkKAUFFRRTUKInaqG291UltTJrMtGlmOtOZ/tB/5enspi1VYqcznWl/eH75zpz385z3fc/7fo9CoVDwf2ZZ4d8iSyrCLYnEJheyOsNL6oZ61uW2s7F0OzmOblLSK4mMSkMQpGXPvoFlhR/FZI6jIKeJHYFhujuv4m2do6L5AoVVJ8hzH8LXO0v9wGf4uz7Bt/UaeeVHiV1djCipl431GssKr6BUiqSsq8L39iz1LfP0ttyiufoyxfbDZNt2klXUT2yKnYS3PGQ5dpJbdpDSwDkqWq/i7VygsHqQmETbsnH/IwGVbCTbPkDTwH0CO+6R732f1ak+rOEZaHRWRNmIqA5DUulRy0YMlgTMMTm8ldNNiX+MipYr+HrvUN7xCen5bYiSvCzjjQJ6fSQllcfxdt6guusaeZ7jWOJtqFThiIIWjc6MMWxFKDiIrAlDLetCU67Rm4ldtYl8z1E83QuUd1ykpu8Gtor9qNS617OWh2tlM67yQZp671LWcgF363k2FPejM6xCJYYjiQYkSY+sMREXu5qklamsjE5Elg2IKg2CWkatMRCfWobz7cvU99/F23ERf/cCmbYuFErlmwVEpUBN6Qh17T+nrvM69pqP2FR2mIy8TkRRj6DUoFBqUEla1iak4swppjLfxcn+Azg2FqFQqlBpjOgMEUhqDWHWVJyNo1T3XKW6c4663pukZnjeLJAYa6Nny32q6y9R37WArfIY0fGFqHUWTNoVrInMITNhPZ5NJWyraKDd6WegqZcnV+8xNzxNcnxKaO9o9eFo9OGoNUaS1tXh65qjquMila3nKW8cx2iKWy6gVusoqzrF212f0tt+hy1dtymrP4PZmo4oaMiN9dOY2cUebw8jnXsY6d7PsY7dLI5f4du7z/nuwZcM7TtOeEQs5sgk9KYYLLHZRMZkYq85Rt1PbuBtO4+rcYy0jYHlAta4DbgD05Q1TlIeOEt50zSO6hGM5hQi1Cl4Vu+ht3g3g20HObfjA24cm+SLaw/4evHX/O6zL/jjw694cesJ/opGDBGrMEcmEp2wGWtMFusLO2jceYuazjl8LRew1w6hNUa9KpC0oZFNvg8p9I2EPiN7/RQ5zgMIqjAS9C7q1g7xrvsQYz0nGet9n/GBU5zYN8z21j2cGBjlxvgtvlp8xtjhUSKjk9EaozGYEzBHppO2sQl/3zVczROU1AzhqB8lPtW+JKBSacmx78XVeInKLQuU1l+gonGGjSUDCLKBeJOb7Oh2itf46ShtZ7uvC1e2k8SoJLx55YwdHGNm8DJPr97n6bXPyct2oBB1CGojcckFrNnYTEnDIJ6tM5Q2jOBsOE1GfueSgCkikcq6y5TXXcRRNUyR9yTOujNkFvQh6cysinGRGlmCxWhljTWNwy17mX5vGHdWHilRq+jwtXH55DS/uf2Y39//Lc3VrSjVJrTmldi8u8lxbmdNbgu+rku4m8ZwNY6zyb1vSSBmlYPSwF3yy4fJKztGfuVx7LVn2FDYH1qCaFM26dEuLAYL6ZYMru6b5q/PvufCkTFaS2oY2n6EF4vP+f7pH/jzsz8ytP8EOnM8ButaimsOsK6wm/i0KirbzuJsPI2zfpQCz9Elgci4fPKrLlJSNYPdP0GxbxhHzSjrN/cjSuGYtKvJjWojK9qBJyXA4ntz/PXx93z36Zf8cuwmTy7c45t7L/nu0e/5/lffcOrASfThiRijMsh09hOT5iXhLT/lrZM4A2ew157C5h/8lyWwrqWoeor8ylPYPKco9n2Eu36C3M2DqIR4wnTJ+FJOUJu6l0DaNq7tnebx+bv8fHiOe8NzvLzxnG/vvuTrz17w8vZT9m/bjag2ojJEYYzLRmNOY012M2Ut05Q1T+JpP4e9YXRJICwyBU/rTdyB8xR4PqTQO4K7YQq7/RKymI5abaU88Rjdm4fwpPppy/Ozy9/G1M4j/GJsnpfXn/CH+1/z1afPeT7/kJ1dO1AIEspgXyCoEeQIsgrfwbVlivKWKaq7Z7HXn14SMEYkUtpwhfyqYYqrximqGsVRP0ZRxQxaXfA6lXCtaeVExxlGB4a4cmKKR5fv8OuFB7y8/SR0Frz89BlffPKYR/MPeLdnN4KoRikIoeZkRdImHLXDlNSdxhUYxxUYI7fswJKArA0nu+Sn5LoPUVA5SLFvBHvdGHb/JJYYF5awaLYUdrO34SC3J67zly//xPz4LP11bQxt/xkvPvkVL24/5uHsPRZnFtnesZO4lRvY6Opjk3sAe8MpvJ0XqGydpqLlLCW1H5Fh610SCJKW3YbDP0lx1Rgl/rM4g2dB8zXy7AcoXOul3d3HyIEzvHj4kkc3H2HPycMqqHEmr2du8CzPbvyC6xPXOH3kDD8JdFNka6Ci6xK122/h7bqCv2+W6p5LVLSdo7RpgpVr3a8KxCTYcPinsVWOUuAN7tQpShumcRTtpzZ/Kz/teI/P5x/w3Ys/c6jvA8IUesIUAoXxacy8P87dmUWG9h5nR/M2ht99jzpnNQZrKuuKtuFuPUvl1nO4mydwNU1QUjcSuiteEZDUOgqcR3H5JqmtPofXN0aBbQ+Bknc40nOMyfeneHLnOfevP6Uso4loRTSxKg19ZY3MDl/i8M4jdNe0crj3XW6fPse2hpYfxlbKrEz34G6exL3lLK6mKdbbev6RuyQQWoZEBwHPJLuab9LadJFqWz+XTl7kxsQ8Zz+Y4vbFOzpKcZJn1yYxR2wAAAABJRU5ErkJggg==";
-const defaultAvatar = new Image();
-defaultAvatar.onload = () => draw();
-defaultAvatar.src = DEFAULT_AVATAR_SRC;
 
 const state = {
   activeSlide: 0,
@@ -175,13 +171,13 @@ function drawCompactTweet(w, h, p) {
 
   const date = state.global.autoDate ? currentDateLabel() : state.global.date;
   const time = (state.global.autoDate ? currentTimeLabel() : state.global.time).replace(":", "h");
-  const meta = `${time} · ${date}`;
+  const meta = `${time} Â· ${date}`;
   ctx.font = `${29 * s}px Arial, sans-serif`;
   ctx.fillStyle = p.muted;
   ctx.fillText(meta, left, 481 * s);
   const metaWidth = ctx.measureText(meta).width;
   ctx.fillStyle = p.blue;
-  ctx.fillText(` · ${state.global.source || "Twitter for iPhone"}`, left + metaWidth, 481 * s);
+  ctx.fillText(` Â· ${state.global.source || "Twitter for iPhone"}`, left + metaWidth, 481 * s);
 
   ctx.strokeStyle = p.line;
   ctx.lineWidth = 1.5 * s;
@@ -275,7 +271,7 @@ function drawAvatar(x, y, size, p) {
   ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
   ctx.clip();
 
-  const avatar = state.global.avatar || (defaultAvatar.complete ? defaultAvatar : null);
+  const avatar = state.global.avatar;
   if (avatar) {
     ctx.drawImage(avatar, x, y, size, size);
   } else {
@@ -423,12 +419,12 @@ function drawMeta(card, p) {
 
   const date = state.global.autoDate ? currentDateLabel() : state.global.date;
   const time = state.global.autoDate ? currentTimeLabel() : state.global.time;
-  let text = `${time} · ${date}`;
+  let text = `${time} Â· ${date}`;
   ctx.fillText(text, card.x + card.pad, metaY);
 
   const textWidth = ctx.measureText(text).width;
   ctx.fillStyle = p.blue;
-  ctx.fillText(` · ${state.global.source || "Twitter for iPhone"}`, card.x + card.pad + textWidth, metaY);
+  ctx.fillText(` Â· ${state.global.source || "Twitter for iPhone"}`, card.x + card.pad + textWidth, metaY);
 }
 
 function drawEngagement(card, p) {
