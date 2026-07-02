@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Criador de Carrosseis</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="slides-panel">
+        <button class="primary-button full" id="addSlideBtn" type="button">
+          <span aria-hidden="true">+</span>
+          Add Slide
+        </button>
+        <div class="slide-list" id="slideList" aria-label="Slides"></div>
+      </aside>
+
+      <main class="settings-panel">
+        <section class="panel-section">
+          <h1>Global Settings</h1>
+          <div class="section-divider"></div>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Canvas Size</span>
+              <select id="canvasSize">
+                <option value="1080">1080 x 1080 (Square)</option>
+                <option value="1350">1080 x 1350 (Portrait)</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Profile Photo</span>
+              <input id="avatarInput" type="file" accept="image/*">
+            </label>
+          </div>
+
+          <label class="field">
+            <span class="range-label">Font Size <strong id="fontSizeValue">46px</strong></span>
+            <input id="fontSize" type="range" min="30" max="76" value="46">
+          </label>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Display Name</span>
+              <input id="displayName" type="text" value="Lucas Felix">
+            </label>
+            <label class="field">
+              <span>Username</span>
+              <div class="input-prefix">
+                <span>@</span>
+                <input id="username" type="text" value="lucasffelix">
+              </div>
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Source Text</span>
+              <input id="sourceText" type="text" value="Twitter for iPhone">
+            </label>
+            <label class="check-field inline">
+              <input id="showVerified" type="checkbox" checked>
+              <span>Show Verification Badge</span>
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Theme</span>
+              <div class="segmented" role="group" aria-label="Theme">
+                <button class="segment active" id="themeLight" type="button">White</button>
+                <button class="segment" id="themeDark" type="button">Dark</button>
+              </div>
+            </label>
+            <label class="field">
+              <span>Post Style</span>
+              <select id="postStyle">
+                <option value="card">Card</option>
+                <option value="flat">Real Feed</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="date-card">
+            <div class="date-card-head">
+              <strong>Date &amp; Time</strong>
+              <label class="check-field">
+                <input id="autoDate" type="checkbox">
+                <span>Auto (Current)</span>
+              </label>
+            </div>
+            <div class="field-row">
+              <label class="field">
+                <span>Date</span>
+                <input id="postDate" type="text" value="14 de abril, 2026">
+              </label>
+              <label class="field">
+                <span>Time</span>
+                <input id="postTime" type="text" value="09:23">
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title-row">
+            <h2>Slide Content</h2>
+            <div class="button-pair">
+              <button class="tool-button" id="addTextBlockBtn" type="button">T Text</button>
+              <button class="tool-button" id="addImageBlockBtn" type="button">Image</button>
+            </div>
+          </div>
+          <div class="section-divider"></div>
+          <div class="blocks-list" id="blocksList"></div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title-row">
+            <h2>Engagement</h2>
+            <label class="check-field">
+              <input id="showEngagement" type="checkbox" checked>
+              <span>Show</span>
+            </label>
+            <button class="link-button" id="randomizeBtn" type="button">Randomize</button>
+          </div>
+          <div class="section-divider"></div>
+          <div class="field-grid">
+            <label class="field">
+              <span>Views</span>
+              <input id="views" type="text" value="2.5M">
+            </label>
+            <label class="field">
+              <span>Replies</span>
+              <input id="replies" type="text" value="2,954">
+            </label>
+            <label class="field">
+              <span>Retweets</span>
+              <input id="retweets" type="text" value="10.5K">
+            </label>
+            <label class="field">
+              <span>Likes</span>
+              <input id="likes" type="text" value="56.5K">
+            </label>
+            <label class="field">
+              <span>Bookmarks</span>
+              <input id="bookmarks" type="text" value="18K">
+            </label>
+          </div>
+        </section>
+      </main>
+
+      <section class="preview-panel">
+        <div class="preview-topbar">
+          <span id="currentSlideLabel">Slide 1</span>
+          <div class="export-actions">
+            <button class="secondary-button" id="exportCurrentBtn" type="button">Export Current</button>
+            <button class="primary-button" id="exportAllBtn" type="button">Export All (ZIP)</button>
+          </div>
+        </div>
+        <div class="canvas-stage">
+          <canvas id="postCanvas" width="1080" height="1080"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <template id="textBlockTemplate">
+      <article class="content-block" data-type="text">
+        <div class="content-block-head">
+          <strong>Text Block</strong>
+          <button class="icon-button remove-block" type="button" title="Remove block">x</button>
+        </div>
+        <label class="field">
+          <span>Text</span>
+          <textarea rows="5"></textarea>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Size</span>
+            <input class="block-size" type="range" min="30" max="90" value="46">
+          </label>
+          <label class="field">
+            <span>Align</span>
+            <select class="block-align">
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+            </select>
+          </label>
+        </div>
+      </article>
+    </template>
+
+    <template id="imageBlockTemplate">
+      <article class="content-block" data-type="image">
+        <div class="content-block-head">
+          <strong>Image Block</strong>
+          <button class="icon-button remove-block" type="button" title="Remove block">x</button>
+        </div>
+        <label class="field">
+          <span>Image</span>
+          <input class="block-image" type="file" accept="image/*">
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Height</span>
+            <input class="block-height" type="range" min="180" max="620" value="360">
+          </label>
+          <label class="check-field inline">
+            <input class="block-rounded" type="checkbox" checked>
+            <span>Rounded</span>
+          </label>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
