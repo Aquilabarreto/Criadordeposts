@@ -1,4 +1,4 @@
-﻿const canvas = document.querySelector("#postCanvas");
+const canvas = document.querySelector("#postCanvas");
 const ctx = canvas.getContext("2d");
 
 const state = {
@@ -171,13 +171,13 @@ function drawCompactTweet(w, h, p) {
 
   const date = state.global.autoDate ? currentDateLabel() : state.global.date;
   const time = (state.global.autoDate ? currentTimeLabel() : state.global.time).replace(":", "h");
-  const meta = `${time} Â· ${date}`;
+  const meta = `${time} · ${date}`;
   ctx.font = `${29 * s}px Arial, sans-serif`;
   ctx.fillStyle = p.muted;
   ctx.fillText(meta, left, 481 * s);
   const metaWidth = ctx.measureText(meta).width;
   ctx.fillStyle = p.blue;
-  ctx.fillText(` Â· ${state.global.source || "Twitter for iPhone"}`, left + metaWidth, 481 * s);
+  ctx.fillText(` · ${state.global.source || "Twitter for iPhone"}`, left + metaWidth, 481 * s);
 
   ctx.strokeStyle = p.line;
   ctx.lineWidth = 1.5 * s;
@@ -419,12 +419,12 @@ function drawMeta(card, p) {
 
   const date = state.global.autoDate ? currentDateLabel() : state.global.date;
   const time = state.global.autoDate ? currentTimeLabel() : state.global.time;
-  let text = `${time} Â· ${date}`;
+  let text = `${time} · ${date}`;
   ctx.fillText(text, card.x + card.pad, metaY);
 
   const textWidth = ctx.measureText(text).width;
   ctx.fillStyle = p.blue;
-  ctx.fillText(` Â· ${state.global.source || "Twitter for iPhone"}`, card.x + card.pad + textWidth, metaY);
+  ctx.fillText(` · ${state.global.source || "Twitter for iPhone"}`, card.x + card.pad + textWidth, metaY);
 }
 
 function drawEngagement(card, p) {
