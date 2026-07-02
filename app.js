@@ -1,12 +1,16 @@
 const canvas = document.querySelector("#postCanvas");
 const ctx = canvas.getContext("2d");
+const DEFAULT_AVATAR_SRC = "data:image/png;base64,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";
+const defaultAvatar = new Image();
+defaultAvatar.onload = () => draw();
+defaultAvatar.src = DEFAULT_AVATAR_SRC;
 
 const state = {
   activeSlide: 0,
   global: {
     size: 1080,
-    theme: "light",
-    style: "card",
+    theme: "dark",
+    style: "flat",
     fontSize: 46,
     displayName: "Lucas Felix",
     username: "lucasffelix",
@@ -27,15 +31,7 @@ const state = {
   },
   slides: [
     {
-      blocks: [
-        {
-          id: crypto.randomUUID(),
-          type: "text",
-          text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n#template",
-          size: 46,
-          align: "left"
-        }
-      ]
+      blocks: []
     }
   ]
 };
@@ -125,6 +121,12 @@ function palette() {
 
 function drawTweet(w, h) {
   const p = palette();
+
+  if (state.global.theme === "dark" && state.global.style === "flat") {
+    drawCompactTweet(w, h, p);
+    return;
+  }
+
   const card = getCardRect(w, h);
 
   if (state.global.style === "card") {
@@ -139,6 +141,81 @@ function drawTweet(w, h) {
   if (state.global.engagement.show) {
     drawEngagement(card, p);
   }
+}
+
+function drawCompactTweet(w, h, p) {
+  const s = Math.min(w, h) / 1080;
+  const left = 89 * s;
+  const right = 961 * s;
+  const avatarSize = 132 * s;
+  const avatarX = left;
+  const avatarY = 238 * s;
+  const textX = 254 * s;
+
+  drawAvatar(avatarX, avatarY, avatarSize, p);
+
+  ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = p.text;
+  ctx.font = `700 ${55 * s}px Arial, sans-serif`;
+  const displayName = state.global.displayName || "Lucas Felix";
+  ctx.fillText(displayName, textX, 295 * s);
+
+  if (state.global.verified) {
+    const nameWidth = ctx.measureText(displayName).width;
+    drawVerified(textX + nameWidth + 10 * s, 248 * s, 44 * s);
+  }
+
+  ctx.fillStyle = p.muted;
+  ctx.font = `${40 * s}px Arial, sans-serif`;
+  ctx.fillText(`@${state.global.username || "lucasffelix"}`, textX, 345 * s);
+
+  ctx.fillStyle = p.muted;
+  ctx.font = `700 ${48 * s}px Arial, sans-serif`;
+  ctx.fillText("...", 909 * s, 302 * s);
+
+  const date = state.global.autoDate ? currentDateLabel() : state.global.date;
+  const time = (state.global.autoDate ? currentTimeLabel() : state.global.time).replace(":", "h");
+  const meta = `${time} · ${date}`;
+  ctx.font = `${29 * s}px Arial, sans-serif`;
+  ctx.fillStyle = p.muted;
+  ctx.fillText(meta, left, 481 * s);
+  const metaWidth = ctx.measureText(meta).width;
+  ctx.fillStyle = p.blue;
+  ctx.fillText(` · ${state.global.source || "Twitter for iPhone"}`, left + metaWidth, 481 * s);
+
+  ctx.strokeStyle = p.line;
+  ctx.lineWidth = 1.5 * s;
+  ctx.beginPath();
+  ctx.moveTo(left, 526 * s);
+  ctx.lineTo(right, 526 * s);
+  ctx.stroke();
+
+  drawCompactEngagement(left, right, 584 * s, s, p);
+
+  ctx.beginPath();
+  ctx.moveTo(left, 623 * s);
+  ctx.lineTo(right, 623 * s);
+  ctx.stroke();
+}
+
+function drawCompactEngagement(left, right, baseline, s, p) {
+  ctx.fillStyle = p.muted;
+  ctx.font = `${26 * s}px Arial, sans-serif`;
+  ctx.textBaseline = "alphabetic";
+
+  drawViewsIcon(112 * s, baseline - 10 * s, s, p.icon);
+  ctx.fillText(state.global.engagement.views, 151 * s, baseline);
+
+  drawReplyIconScaled(276 * s, baseline - 9 * s, s, p.icon);
+  ctx.fillText(state.global.engagement.replies, 306 * s, baseline);
+
+  drawRetweetIconScaled(423 * s, baseline - 9 * s, s, p.icon);
+  ctx.fillText(state.global.engagement.retweets, 459 * s, baseline);
+
+  drawHeartIconScaled(595 * s, baseline - 9 * s, s, p.icon);
+  ctx.fillText(state.global.engagement.likes, 628 * s, baseline);
+
+  drawShareIconScaled(766 * s, baseline - 9 * s, s, p.icon);
 }
 
 function getCardRect(w, h) {
@@ -198,8 +275,9 @@ function drawAvatar(x, y, size, p) {
   ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
   ctx.clip();
 
-  if (state.global.avatar) {
-    ctx.drawImage(state.global.avatar, x, y, size, size);
+  const avatar = state.global.avatar || (defaultAvatar.complete ? defaultAvatar : null);
+  if (avatar) {
+    ctx.drawImage(avatar, x, y, size, size);
   } else {
     const gradient = ctx.createLinearGradient(x, y, x + size, y + size);
     gradient.addColorStop(0, "#21d4fd");
@@ -209,8 +287,8 @@ function drawAvatar(x, y, size, p) {
   }
 
   ctx.restore();
-  ctx.strokeStyle = p.isDark ? "#17202a" : "#ffffff";
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = p.isDark ? "#05070a" : "#ffffff";
+  ctx.lineWidth = Math.max(2, size * 0.015);
   ctx.beginPath();
   ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
   ctx.stroke();
@@ -482,6 +560,54 @@ function drawShareIcon(x, y, color) {
   ctx.lineTo(x + 20, y + 24);
   ctx.lineTo(x + 20, y + 4);
   ctx.stroke();
+  ctx.restore();
+}
+
+function drawViewsIcon(x, y, scale, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5 * scale;
+  ctx.lineCap = "round";
+  const bars = [
+    [0, 12],
+    [10, 20],
+    [20, 6],
+    [30, 16]
+  ];
+  for (const [offset, height] of bars) {
+    ctx.beginPath();
+    ctx.moveTo(x + offset * scale, y + 20 * scale);
+    ctx.lineTo(x + offset * scale, y + (20 - height) * scale);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawReplyIconScaled(x, y, scale, color) {
+  ctx.save();
+  ctx.scale(scale, scale);
+  drawReplyIcon(x / scale, y / scale, color);
+  ctx.restore();
+}
+
+function drawRetweetIconScaled(x, y, scale, color) {
+  ctx.save();
+  ctx.scale(scale * 0.68, scale * 0.68);
+  drawRetweetIcon(x / (scale * 0.68), y / (scale * 0.68), color);
+  ctx.restore();
+}
+
+function drawHeartIconScaled(x, y, scale, color) {
+  ctx.save();
+  ctx.scale(scale * 0.58, scale * 0.58);
+  drawHeartIcon(x / (scale * 0.58), y / (scale * 0.58), color);
+  ctx.restore();
+}
+
+function drawShareIconScaled(x, y, scale, color) {
+  ctx.save();
+  ctx.scale(scale * 0.68, scale * 0.68);
+  drawShareIcon(x / (scale * 0.68), y / (scale * 0.68), color);
   ctx.restore();
 }
 
