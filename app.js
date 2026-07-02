@@ -90,7 +90,9 @@ function draw() {
 }
 
 function drawBackground(w, h) {
-  if (state.global.theme === "light") {
+  if (state.global.style === "flat") {
+    ctx.fillStyle = state.global.theme === "light" ? "#ffffff" : "#000000";
+  } else if (state.global.theme === "light") {
     const gradient = ctx.createLinearGradient(0, 0, w, h);
     gradient.addColorStop(0, "#12c8ef");
     gradient.addColorStop(1, "#0989fb");
@@ -118,7 +120,7 @@ function palette() {
 function drawTweet(w, h) {
   const p = palette();
 
-  if (state.global.theme === "dark" && state.global.style === "flat") {
+  if (state.global.style === "flat") {
     drawCompactTweet(w, h, p);
     return;
   }
@@ -151,33 +153,49 @@ function drawCompactTweet(w, h, p) {
   drawAvatar(avatarX, avatarY, avatarSize, p);
 
   ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = p.text;
-  ctx.font = `700 ${55 * s}px Arial, sans-serif`;
   const displayName = state.global.displayName || "Lucas Felix";
-  ctx.fillText(displayName, textX, 295 * s);
+  const reservedRight = 150 * s;
+  const badgeSpace = state.global.verified ? 54 * s : 0;
+  const name = drawFittedText(displayName, textX, 295 * s, {
+    maxWidth: right - textX - reservedRight - badgeSpace,
+    maxSize: 48 * s,
+    minSize: 32 * s,
+    weight: 700,
+    color: p.text
+  });
 
   if (state.global.verified) {
-    const nameWidth = ctx.measureText(displayName).width;
-    drawVerified(textX + nameWidth + 10 * s, 248 * s, 44 * s);
+    const badgeSize = Math.max(28 * s, name.size * 0.8);
+    drawVerified(textX + name.width + 10 * s, 295 * s - badgeSize * 0.78, badgeSize);
   }
 
-  ctx.fillStyle = p.muted;
-  ctx.font = `${40 * s}px Arial, sans-serif`;
-  ctx.fillText(`@${state.global.username || "lucasffelix"}`, textX, 345 * s);
+  drawFittedText(`@${state.global.username || "lucasffelix"}`, textX, 345 * s, {
+    maxWidth: right - textX - reservedRight,
+    maxSize: 34 * s,
+    minSize: 25 * s,
+    weight: 400,
+    color: p.muted
+  });
 
   ctx.fillStyle = p.muted;
-  ctx.font = `700 ${48 * s}px Arial, sans-serif`;
+  ctx.font = `700 ${40 * s}px Arial, sans-serif`;
   ctx.fillText("...", 909 * s, 302 * s);
 
   const date = state.global.autoDate ? currentDateLabel() : state.global.date;
   const time = (state.global.autoDate ? currentTimeLabel() : state.global.time).replace(":", "h");
   const meta = `${time} · ${date}`;
-  ctx.font = `${29 * s}px Arial, sans-serif`;
+  ctx.font = `${27 * s}px Arial, sans-serif`;
   ctx.fillStyle = p.muted;
   ctx.fillText(meta, left, 481 * s);
   const metaWidth = ctx.measureText(meta).width;
   ctx.fillStyle = p.blue;
-  ctx.fillText(` · ${state.global.source || "Twitter for iPhone"}`, left + metaWidth, 481 * s);
+  drawFittedText(` · ${state.global.source || "Twitter for iPhone"}`, left + metaWidth, 481 * s, {
+    maxWidth: right - left - metaWidth,
+    maxSize: 27 * s,
+    minSize: 22 * s,
+    weight: 400,
+    color: p.blue
+  });
 
   ctx.strokeStyle = p.line;
   ctx.lineWidth = 1.5 * s;
@@ -196,22 +214,86 @@ function drawCompactTweet(w, h, p) {
 
 function drawCompactEngagement(left, right, baseline, s, p) {
   ctx.fillStyle = p.muted;
-  ctx.font = `${26 * s}px Arial, sans-serif`;
+  ctx.font = `${23 * s}px Arial, sans-serif`;
   ctx.textBaseline = "alphabetic";
 
-  drawViewsIcon(112 * s, baseline - 10 * s, s, p.icon);
-  ctx.fillText(state.global.engagement.views, 151 * s, baseline);
+  drawViewsIcon(107 * s, baseline - 24 * s, s, p.icon);
+  drawFittedText(state.global.engagement.views, 151 * s, baseline, {
+    maxWidth: 72 * s,
+    maxSize: 23 * s,
+    minSize: 18 * s,
+    color: p.muted
+  });
 
-  drawReplyIconScaled(276 * s, baseline - 9 * s, s, p.icon);
-  ctx.fillText(state.global.engagement.replies, 306 * s, baseline);
+  drawCompactReplyIcon(263 * s, baseline - 26 * s, s, p.icon);
+  drawFittedText(state.global.engagement.replies, 306 * s, baseline, {
+    maxWidth: 85 * s,
+    maxSize: 23 * s,
+    minSize: 18 * s,
+    color: p.muted
+  });
 
-  drawRetweetIconScaled(423 * s, baseline - 9 * s, s, p.icon);
-  ctx.fillText(state.global.engagement.retweets, 459 * s, baseline);
+  drawCompactRetweetIcon(421 * s, baseline - 25 * s, s, p.icon);
+  drawFittedText(state.global.engagement.retweets, 459 * s, baseline, {
+    maxWidth: 88 * s,
+    maxSize: 23 * s,
+    minSize: 18 * s,
+    color: p.muted
+  });
 
-  drawHeartIconScaled(595 * s, baseline - 9 * s, s, p.icon);
-  ctx.fillText(state.global.engagement.likes, 628 * s, baseline);
+  drawCompactHeartIcon(590 * s, baseline - 26 * s, s, p.icon);
+  drawFittedText(state.global.engagement.likes, 628 * s, baseline, {
+    maxWidth: 88 * s,
+    maxSize: 23 * s,
+    minSize: 18 * s,
+    color: p.muted
+  });
 
-  drawShareIconScaled(766 * s, baseline - 9 * s, s, p.icon);
+  drawCompactShareIcon(761 * s, baseline - 28 * s, s, p.icon);
+}
+
+function drawFittedText(text, x, y, options) {
+  const minSize = options.minSize || options.maxSize;
+  const weight = options.weight || 400;
+  let size = options.maxSize;
+  let label = String(text || "");
+
+  ctx.fillStyle = options.color;
+  ctx.textBaseline = "alphabetic";
+
+  while (size > minSize) {
+    ctx.font = `${weight} ${size}px Arial, sans-serif`;
+    if (ctx.measureText(label).width <= options.maxWidth) break;
+    size -= 1;
+  }
+
+  ctx.font = `${weight} ${size}px Arial, sans-serif`;
+  if (ctx.measureText(label).width > options.maxWidth) {
+    label = ellipsizeText(label, options.maxWidth);
+  }
+
+  ctx.fillText(label, x, y);
+  return {
+    text: label,
+    size,
+    width: ctx.measureText(label).width
+  };
+}
+
+function ellipsizeText(text, maxWidth) {
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  const ellipsis = "...";
+  let left = 0;
+  let right = text.length;
+  while (left < right) {
+    const mid = Math.ceil((left + right) / 2);
+    if (ctx.measureText(text.slice(0, mid) + ellipsis).width <= maxWidth) {
+      left = mid;
+    } else {
+      right = mid - 1;
+    }
+  }
+  return text.slice(0, left) + ellipsis;
 }
 
 function getCardRect(w, h) {
@@ -562,20 +644,88 @@ function drawShareIcon(x, y, color) {
 function drawViewsIcon(x, y, scale, color) {
   ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = 2.5 * scale;
+  ctx.lineWidth = 2 * scale;
   ctx.lineCap = "round";
-  const bars = [
-    [0, 12],
-    [10, 20],
-    [20, 6],
-    [30, 16]
-  ];
+  const bottom = y + 21 * scale;
+  const bars = [[0, 8], [7, 15], [14, 5], [21, 12]];
   for (const [offset, height] of bars) {
     ctx.beginPath();
-    ctx.moveTo(x + offset * scale, y + 20 * scale);
-    ctx.lineTo(x + offset * scale, y + (20 - height) * scale);
+    ctx.moveTo(x + offset * scale, bottom);
+    ctx.lineTo(x + offset * scale, bottom - height * scale);
     ctx.stroke();
   }
+  ctx.restore();
+}
+
+function drawCompactReplyIcon(x, y, scale, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3 * scale;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.ellipse(x + 17 * scale, y + 14 * scale, 15 * scale, 12 * scale, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x + 7 * scale, y + 23 * scale);
+  ctx.lineTo(x + 2 * scale, y + 32 * scale);
+  ctx.lineTo(x + 14 * scale, y + 26 * scale);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawCompactRetweetIcon(x, y, scale, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3 * scale;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(x + 4 * scale, y + 10 * scale);
+  ctx.lineTo(x + 28 * scale, y + 10 * scale);
+  ctx.lineTo(x + 22 * scale, y + 4 * scale);
+  ctx.moveTo(x + 28 * scale, y + 10 * scale);
+  ctx.lineTo(x + 22 * scale, y + 16 * scale);
+  ctx.moveTo(x + 30 * scale, y + 24 * scale);
+  ctx.lineTo(x + 6 * scale, y + 24 * scale);
+  ctx.lineTo(x + 12 * scale, y + 18 * scale);
+  ctx.moveTo(x + 6 * scale, y + 24 * scale);
+  ctx.lineTo(x + 12 * scale, y + 30 * scale);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawCompactHeartIcon(x, y, scale, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3 * scale;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(x + 16 * scale, y + 29 * scale);
+  ctx.bezierCurveTo(x - 4 * scale, y + 15 * scale, x + 4 * scale, y - 1 * scale, x + 16 * scale, y + 9 * scale);
+  ctx.bezierCurveTo(x + 28 * scale, y - 1 * scale, x + 36 * scale, y + 15 * scale, x + 16 * scale, y + 29 * scale);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawCompactShareIcon(x, y, scale, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3 * scale;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(x + 17 * scale, y + 25 * scale);
+  ctx.lineTo(x + 17 * scale, y + 4 * scale);
+  ctx.moveTo(x + 8 * scale, y + 13 * scale);
+  ctx.lineTo(x + 17 * scale, y + 4 * scale);
+  ctx.lineTo(x + 26 * scale, y + 13 * scale);
+  ctx.moveTo(x + 5 * scale, y + 20 * scale);
+  ctx.lineTo(x + 5 * scale, y + 32 * scale);
+  ctx.lineTo(x + 29 * scale, y + 32 * scale);
+  ctx.lineTo(x + 29 * scale, y + 20 * scale);
+  ctx.stroke();
   ctx.restore();
 }
 
